@@ -296,7 +296,11 @@ async function askJarvis(message, speakReply = false) {
   status.textContent = "● GEMINI सोच रहा है...";
 
   try {
-    const response = await fetch("/api/chat", {
+    const { Capacitor } = await import("@capacitor/core");
+    const apiBase = Capacitor.isNativePlatform()
+      ? "https://jarvis-ai-e5zw.onrender.com"
+      : "";
+    const response = await fetch(`${apiBase}/api/chat`, {
       method: "POST",
       headers: {"Content-Type":"application/json"},
       body: JSON.stringify({
