@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS AI</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #020713;
+    color: #00d9ff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+header {
+    padding: 25px;
+    font-size: 28px;
+    letter-spacing: 5px;
+    text-shadow: 0 0 15px #00d9ff;
+}
+
+.circle {
+    width: 210px;
+    height: 210px;
+    border: 3px solid #00d9ff;
+    border-radius: 50%;
+    margin: 75px auto 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 65px;
+    box-shadow: 0 0 30px #007bff,
+                inset 0 0 30px #007bff;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    50% {
+        box-shadow: 0 0 60px #00d9ff,
+                    inset 0 0 50px #007bff;
+    }
+}
+
+.status {
+    font-size: 18px;
+    margin: 25px;
+}
+
+button {
+    background: #00d9ff;
+    color: #00111c;
+    border: none;
+    padding: 16px 35px;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#reply {
+    margin: 30px 20px;
+    color: white;
+}
+</style>
+</head>
+
+<body>
+
+<header>J.A.R.V.I.S</header>
+
+<div class="circle">◉</div>
+
+<div class="status">● SYSTEM ONLINE</div>
+
+<button onclick="speak()">ACTIVATE JARVIS</button>
+
+<div id="reply">Hello Sir! I am JARVIS.</div>
+
+<script>
+function speak() {
+    const message = "नमस्ते सर, मैं आपका जार्विस हूं।";
+    document.getElementById("reply").innerText = message;
+
+    const speech = new SpeechSynthesisUtterance(message);
+    speech.lang = "hi-IN";
+    speechSynthesis.speak(speech);
+}
+</script>
+
+</body>
+</html>

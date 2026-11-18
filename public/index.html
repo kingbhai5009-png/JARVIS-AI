@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#020713">
+<title>JARVIS AI</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ background:#020713;
+ color:#00d9ff;
+ font-family:Arial,sans-serif;
+ text-align:center;
+ min-height:100vh;
+}
+
+header{
+ padding:25px 10px;
+ font-size:30px;
+ letter-spacing:7px;
+ text-shadow:0 0 20px #00d9ff;
+}
+
+.circle{
+ width:210px;
+ height:210px;
+ border:3px solid #00d9ff;
+ border-radius:50%;
+ margin:55px auto 25px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:65px;
+ box-shadow:0 0 35px #007bff,
+ inset 0 0 35px #007bff;
+ animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+ 50%{
+  box-shadow:0 0 65px #00d9ff,
+  inset 0 0 50px #007bff;
+ }
+}
+
+.circle.listening{
+ animation:pulse .5s infinite;
+ border-color:#fff;
+}
+
+.status{
+ margin:20px;
+ font-size:16px;
+}
+
+select{
+ background:#07172b;
+ color:#00d9ff;
+ border:1px solid #00d9ff;
+ padding:12px;
+ border-radius:10px;
+ margin:10px;
+}
+
+button{
+ background:#00d9ff;
+ color:#00111c;
+ border:0;
+ padding:16px 30px;
+ border-radius:30px;
+ font-size:17px;
+ font-weight:bold;
+ margin:10px;
+ cursor:pointer;
+}
+
+button:active{
+ transform:scale(.95);
+}
+
+#conversation{
+ margin:25px 15px;
+ padding:15px;
+ border:1px solid #075b83;
+ border-radius:15px;
+ min-height:100px;
+ color:white;
+ text-align:left;
+ line-height:1.6;
+}
+
+.label{
+ color:#00d9ff;
+ font-weight:bold;
+}
+
+.note{
+ color:#7893aa;
+ font-size:12px;
+ padding:15px;
+}
+</style>
+</head>
+
+<body>
+
+<header>J.A.R.V.I.S</header>
+
+<div class="circle" id="circle">◉</div>
+
+<div class="status" id="status">
+● SYSTEM ONLINE
+</div>
+
+<select id="language">
+<option value="hi-IN">हिंदी</option>
+<option value="en-US">English</option>
+</select>
+
+<br>
+
+<button id="micButton">🎤 TALK TO JARVIS</button>
+
+<div id="conversation">
+<div class="label">JARVIS:</div>
+नमस्ते सर! मैं आपका JARVIS हूँ।
+</div>
+
+<div class="note">
+VOICE ASSISTANT | VERSION 1.0
+</div>
+
+<script type="module">
+
+import { Capacitor } from '@capacitor/core';
+import { SpeechRecognition } from '@capacitor-community/speech-recognition';
+
+const status = document.getElementById("status");
+const circle = document.getElementById("circle");
+const conversation = document.getElementById("conversation");
+const micButton = document.getElementById("micButton");
+const language = document.getElementById("language");
+
+function showMessage(user, reply) {
+ conversation.innerHTML = `
+ <div class="label">YOU:</div>
+ ${escapeHTML(user)}
+ <br><br>
+ <div class="label">JARVIS:</div>
+ ${escapeHTML(reply)}
+ `;
+}
+
+function escapeHTML(text) {
+ const div = document.createElement("div");
+ div.textContent = text;
+ return div.innerHTML;
+}
+
+function speak(text) {
+ if (!("speechSynthesis" in window)) {
+  status.textContent = "VOICE OUTPUT NOT AVAILABLE";
+  return;
+ }
+
+ speechSynthesis.cancel();
+
+ const speech = new SpeechSynthesisUtterance(text);
+ speech.lang = language.value;
+ speech.rate = 0.95;
+
+ speechSynthesis.speak(speech);
+}
+
+function answer(text) {
+ const q = text.toLowerCase();
+ let reply;
+
+ if (
+  q.includes("नमस्ते") ||
+  q.includes("hello") ||
+  q.includes("हेलो")
+ ) {
+  reply = "नमस्ते सर! मैं आपकी क्या सहायता कर सकता हूँ?";
+ }
+ else if (
+  q.includes("समय") ||
+  q.includes("time")
+ ) {
+  reply = "अभी समय है " +
+   new Date().toLocaleTimeString("hi-IN");
+ }
+ else if (
+  q.includes("तारीख") ||
+  q.includes("date")
+ ) {
+  reply = "आज की तारीख है " +
+   new Date().toLocaleDateString("hi-IN");
+ }
+ else {
+  reply = "सर, मैंने आपकी बात सुन ली है। मेरा Gemini AI Brain अभी कनेक्ट नहीं हुआ है।";
+ }
+
+ showMessage(text, reply);
+ status.textContent = "● JARVIS ONLINE";
+ speak(reply);
+}
+
+async function listenNative() {
+
+ const availability = await SpeechRecognition.available();
+
+ if (!availability.available) {
+  throw new Error("इस फोन में Speech Recognition उपलब्ध नहीं है।");
+ }
+
+ const permission = await SpeechRecognition.requestPermissions();
+
+ if (permission.speechRecognition !== "granted") {
+  throw new Error("माइक्रोफोन की अनुमति नहीं मिली।");
+ }
+
+ status.textContent = "● LISTENING...";
+
+ const result = await SpeechRecognition.start({
+  language: language.value,
+  maxResults: 1,
+  prompt: "JARVIS से बात करें",
+  partialResults: false,
+  popup: true
+ });
+
+ const text = result.matches?.[0];
+
+ if (text) {
+  answer(text);
+ } else {
+  status.textContent = "● कुछ सुनाई नहीं दिया। दोबारा कोशिश करें।";
+ }
+}
+
+function listenWeb() {
+
+ const Recognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+ if (!Recognition) {
+  throw new Error("इस ब्राउज़र में Voice Recognition उपलब्ध नहीं है।");
+ }
+
+ const recognition = new Recognition();
+
+ recognition.lang = language.value;
+ recognition.maxAlternatives = 1;
+ recognition.interimResults = false;
+
+ recognition.onstart = () => {
+  status.textContent = "● LISTENING...";
+ };
+
+ recognition.onresult = (event) => {
+  const text = event.results[0][0].transcript;
+  answer(text);
+ };
+
+ recognition.onerror = (event) => {
+  status.textContent = "VOICE ERROR: " + event.error;
+ };
+
+ recognition.onend = () => {
+  circle.classList.remove("listening");
+ };
+
+ recognition.start();
+}
+
+micButton.addEventListener("click", async () => {
+
+ try {
+  circle.classList.add("listening");
+  micButton.disabled = true;
+
+  if (Capacitor.isNativePlatform()) {
+   await listenNative();
+  } else {
+   listenWeb();
+  }
+
+ } catch (error) {
+  status.textContent = "● " + error.message;
+  console.error(error);
+
+ } finally {
+  micButton.disabled = false;
+  circle.classList.remove("listening");
+ }
+});
+
+</script>
+
+</body>
+</html>
