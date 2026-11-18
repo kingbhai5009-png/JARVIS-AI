@@ -46,14 +46,51 @@ button:disabled{opacity:.45}
 #status{color:#83b5d4;font-size:11px;padding:9px 2px 0}
 #language{background:#10243a;color:#dcecff;border:1px solid #28516f;border-radius:8px;padding:5px;margin-top:7px}
 .credit{text-align:center;color:#64839e;font-size:11px;padding:8px 0 0;letter-spacing:1px}
+
+/* Attachment, navigation and utility panels */
+.menu-btn{border:1px solid #28516f;background:#10243a;color:#dff5ff;border-radius:11px;padding:9px 12px;font-size:18px}
+#drawer{display:none;position:fixed;z-index:30;inset:0;background:#0009}
+#drawer.open{display:block}
+#drawerPanel{width:min(82vw,310px);height:100%;background:#0b1b2d;border-right:1px solid #28516f;padding:22px 16px;box-shadow:15px 0 40px #0008}
+.drawerTitle{font-weight:800;color:#48d9ff;font-size:20px;margin:8px 8px 22px}
+.drawerItem{width:100%;text-align:left;padding:14px 12px;margin:4px 0;border:1px solid transparent;border-radius:12px;background:transparent;color:#e8f6ff;font-size:16px}
+.drawerItem:active,.drawerItem:hover{background:#142e47;border-color:#28516f}
+#attachMenu{display:none;position:absolute;bottom:76px;left:12px;z-index:20;background:#10243a;border:1px solid #28516f;border-radius:16px;padding:8px;width:min(260px,75vw);box-shadow:0 12px 35px #0009}
+#attachMenu.open{display:grid;gap:6px}
+.attachOption{padding:12px;text-align:left;border:0;border-radius:10px;background:#17344f;color:#eaf7ff}
+#composerWrap{position:relative}
+#attachmentInfo{display:none;color:#9fe8ff;font-size:12px;padding:5px 10px}
+#attachmentInfo.show{display:block}
+#thinkButton.active{background:#164b69;color:#75e5ff;outline:1px solid #4bdcff}
+.modalPanel{position:fixed;z-index:40;inset:12% 6%;max-width:520px;margin:auto;height:max-content;max-height:76vh;overflow:auto;background:#0b1b2d;border:1px solid #28516f;border-radius:18px;padding:18px;box-shadow:0 20px 60px #000b;display:none}
+.modalPanel.open{display:block}
+.modalPanel h3{margin:0 0 12px;color:#52dcff}
+.modalPanel button{border:1px solid #28516f;background:#15324c;color:#eaf7ff;border-radius:10px;padding:9px 12px;margin:4px}
+.modalPanel .closeModal{float:right}
+.modalPanel input,.modalPanel textarea{width:100%;background:#071321;color:white;border:1px solid #28516f;border-radius:10px;padding:10px;margin:6px 0}
+#projectList button,#libraryList button{display:block;width:100%;text-align:left;margin:6px 0}
+
 @media(min-width:700px){#chatArea{padding:22px 25px}#bottom{padding-left:25px;padding-right:25px}.hero{padding-top:30px}}
 </style>
 </head>
 <body>
 <header>
+ <button class="menu-btn" id="menuButton" aria-label="Menu">☰</button>
  <div class="brand">J.A.R.V.I.S.<small>PERSONAL AI ASSISTANT</small></div>
  <div class="head-actions"><button class="topbtn" id="newChat">＋ New Chat</button></div>
 </header>
+
+<div id="drawer" aria-hidden="true"><div id="drawerPanel"><div class="drawerTitle">✦ JARVIS MENU</div>
+<button class="drawerItem" data-panel="libraryPanel">▤ Library</button>
+<button class="drawerItem" data-panel="projectsPanel">▣ Projects</button>
+<button class="drawerItem" data-panel="scheduledPanel">◷ Scheduled</button>
+<button class="drawerItem" data-panel="pluginsPanel">⎋ Plugins</button>
+<button class="drawerItem" id="closeDrawer">✕ Close menu</button></div></div>
+<section class="modalPanel" id="libraryPanel"><button class="closeModal">Close</button><h3>Library</h3><p>Saved chats is device-local.</p><button id="saveChatButton">Save current chat</button><div id="libraryList"></div></section>
+<section class="modalPanel" id="projectsPanel"><button class="closeModal">Close</button><h3>Projects</h3><input id="projectName" placeholder="Project name"><button id="createProject">Create project</button><div id="projectList"></div></section>
+<section class="modalPanel" id="scheduledPanel"><button class="closeModal">Close</button><h3>Scheduled reminders</h3><p>Reminder will alert while JARVIS is open on this device.</p><input id="reminderText" placeholder="Reminder message"><input id="reminderMinutes" type="number" min="1" max="10080" placeholder="Minutes from now"><button id="addReminder">Set reminder</button><div id="reminderList"></div></section>
+<section class="modalPanel" id="pluginsPanel"><button class="closeModal">Close</button><h3>Plugins</h3><p>External plugin connections are not configured on this server yet. This section is a placeholder; no fake plugin actions are enabled.</p></section>
+
 <main id="chatArea">
  <section class="hero" id="welcome">
   <div class="orb"><span>J</span></div>
@@ -69,11 +106,24 @@ button:disabled{opacity:.45}
 </main>
 <footer id="bottom">
  <div id="controls">
+  <div id="attachmentInfo"></div>
+  <div id="composerWrap">
+  <div id="attachMenu">
+   <button class="attachOption" id="cameraOption">📷 Camera</button>
+   <button class="attachOption" id="photosOption">🖼️ Photos</button>
+   <button class="attachOption" id="filesOption">📎 Files (TXT/MD/CSV/JSON)</button>
+  </div>
   <div id="composer">
+   <button class="action" id="attachButton" type="button" title="Attach">＋</button>
    <button class="action" id="micButton" type="button" title="बोलकर पूछें">🎤</button>
    <textarea id="messageInput" rows="1" placeholder="Message JARVIS…"></textarea>
+   <button class="action" id="thinkButton" type="button" title="Think harder">🧠</button>
    <button class="action" id="sendButton" type="button">➤</button>
   </div>
+  </div>
+  <input id="cameraInput" type="file" accept="image/*" capture="environment" hidden>
+  <input id="photosInput" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+  <input id="filesInput" type="file" accept=".txt,.md,.csv,.json,text/plain,text/markdown,text/csv,application/json" hidden>
   <div class="footrow">
    <div id="status">● JARVIS ONLINE · GEMINI CONNECTED</div>
    <select id="language"><option value="hi-IN">हिंदी</option><option value="en-US">English</option></select>
@@ -85,7 +135,7 @@ button:disabled{opacity:.45}
 const $=id=>document.getElementById(id);
 const chatArea=$("chatArea"),input=$("messageInput"),sendButton=$("sendButton"),micButton=$("micButton"),status=$("status"),language=$("language");
 const STORAGE_KEY="jarvis_chat_v6";
-let history=[],busy=false;
+let history=[],busy=false,attachment=null,thinkHarder=false;
 try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");if(Array.isArray(saved))history=saved.filter(x=>x&&["user","model"].includes(x.role)&&typeof x.text==="string").slice(-40)}catch{history=[]}
 function updateClock(){const now=new Date();$("dateTime").textContent=new Intl.DateTimeFormat("hi-IN",{timeZone:"Asia/Kolkata",dateStyle:"full",timeStyle:"short"}).format(now)+" (IST)"}
 updateClock();setInterval(updateClock,30000);
@@ -93,8 +143,8 @@ function saveHistory(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(histo
 function scrollBottom(){chatArea.scrollTop=chatArea.scrollHeight}
 function addMessage(role,text,save=false){$("welcome")?.remove();$("quickPrompts")?.remove();const row=document.createElement("div");row.className="message "+(role==="user"?"user":"assistant");const avatar=document.createElement("div");avatar.className="avatar";avatar.textContent=role==="user"?"आप":"J";const content=document.createElement("div");content.className="content";content.textContent=text;row.append(avatar,content);chatArea.appendChild(row);scrollBottom();if(save){history.push({role,text});history=history.slice(-40);saveHistory()}return content}
 function renderHistory(){for(const item of history)addMessage(item.role,item.text,false)}
-async function askJarvis(message,speakReply=false){message=message.trim();if(!message||busy)return;busy=true;sendButton.disabled=true;micButton.disabled=true;addMessage("user",message,true);const replyBox=addMessage("model","सोच रहा हूँ…");status.textContent="● GEMINI THINKING…";try{const {Capacitor}=await import("@capacitor/core");const apiBase=Capacitor.isNativePlatform()?"https://jarvis-ai-e5zw.onrender.com":"";const response=await fetch(`${apiBase}/api/chat`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message,history:history.slice(0,-1).slice(-12)})});let data;try{data=await response.json()}catch{throw new Error("Server se sahi response nahi mila")}if(!response.ok||!data.success||!data.reply)throw new Error(data.error||"जवाब नहीं मिला");replyBox.textContent=data.reply;history.push({role:"model",text:data.reply});history=history.slice(-40);saveHistory();status.textContent="● JARVIS ONLINE · GEMINI CONNECTED";if(speakReply&&"speechSynthesis"in window){speechSynthesis.cancel();const speech=new SpeechSynthesisUtterance(data.reply);speech.lang=language.value;speech.rate=.95;speechSynthesis.speak(speech)}}catch(error){replyBox.textContent="माफ़ कीजिए, जवाब नहीं मिला। "+error.message;status.textContent="● CONNECTION ERROR";console.error("JARVIS:",error)}finally{busy=false;sendButton.disabled=false;micButton.disabled=false;input.focus();scrollBottom()}}
-sendButton.addEventListener("click",()=>{const text=input.value;if(!text.trim())return;input.value="";input.style.height="auto";askJarvis(text,false)});
+async function askJarvis(message,speakReply=false){message=message.trim();if(!message||busy)return;busy=true;sendButton.disabled=true;micButton.disabled=true;addMessage("user",message+(attachment?"\n[Attachment: "+(attachment.name||"image")+"]":""),true);const replyBox=addMessage("model","सोच रहा हूँ…");status.textContent="● GEMINI THINKING…";try{const {Capacitor}=await import("@capacitor/core");const apiBase=Capacitor.isNativePlatform()?"https://jarvis-ai-e5zw.onrender.com":"";const response=await fetch(`${apiBase}/api/chat`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message,history:history.slice(0,-1).slice(-12),attachment,thinkHarder})});let data;try{data=await response.json()}catch{throw new Error("Server se sahi response nahi mila")}if(!response.ok||!data.success||!data.reply)throw new Error(data.error||"जवाब नहीं मिला");replyBox.textContent=data.reply;history.push({role:"model",text:data.reply});history=history.slice(-40);saveHistory();status.textContent="● JARVIS ONLINE · GEMINI CONNECTED";attachment=null;$("attachmentInfo").classList.remove("show");$("attachmentInfo").textContent="";if(speakReply&&"speechSynthesis"in window){speechSynthesis.cancel();const speech=new SpeechSynthesisUtterance(data.reply);speech.lang=language.value;speech.rate=.95;speechSynthesis.speak(speech)}}catch(error){replyBox.textContent="माफ़ कीजिए, जवाब नहीं मिला। "+error.message;status.textContent="● CONNECTION ERROR";console.error("JARVIS:",error)}finally{busy=false;sendButton.disabled=false;micButton.disabled=false;input.focus();scrollBottom()}}
+sendButton.addEventListener("click",()=>{let text=input.value;if(!text.trim()&&!attachment)return;input.value="";if(!text.trim())text="Please analyze the attached file/image and explain it.";input.style.height="auto";askJarvis(text,false)});
 input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendButton.click()}});
 input.addEventListener("input",()=>{input.style.height="auto";input.style.height=Math.min(input.scrollHeight,120)+"px"});
 $("newChat").addEventListener("click",()=>{if(busy)return;history=[];saveHistory();chatArea.innerHTML=`<section class="hero" id="welcome"><div class="orb"><span>J</span></div><h1>HELLO, I'M <em>JARVIS</em></h1><p class="tagline">Your intelligent personal assistant</p><div class="datetime" id="dateTime"></div></section><div class="quick" id="quickPrompts"><button data-prompt="Aaj ki date aur samay batao">📅 Aaj ki date</button><button data-prompt="Mujhe Hindi mein introduce karo">✨ Introduce yourself</button><button data-prompt="Mujhe ek useful idea do">💡 Give me an idea</button></div>`;updateClock();bindQuick();if("speechSynthesis"in window)speechSynthesis.cancel();status.textContent="● NEW CHAT STARTED"});
@@ -102,6 +152,33 @@ function bindQuick(){document.querySelectorAll("[data-prompt]").forEach(b=>b.add
 bindQuick();
 async function startVoice(){if(busy)return;try{micButton.disabled=true;status.textContent="● LISTENING…";const {Capacitor}=await import("@capacitor/core");if(Capacitor.isNativePlatform()){const {SpeechRecognition}=await import("@capacitor-community/speech-recognition");const permission=await SpeechRecognition.requestPermissions();if(permission.speechRecognition!=="granted")throw new Error("माइक्रोफोन की अनुमति नहीं मिली");const result=await SpeechRecognition.start({language:language.value,maxResults:1,partialResults:false});const spoken=result.matches?.[0];if(spoken)await askJarvis(spoken,true);else status.textContent="● आवाज समझ नहीं आई"}else{const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(!Recognition)throw new Error("इस ब्राउज़र में Voice Recognition उपलब्ध नहीं है");const recognition=new Recognition();recognition.lang=language.value;recognition.maxAlternatives=1;recognition.interimResults=false;recognition.onresult=e=>askJarvis(e.results[0][0].transcript,true);recognition.onerror=e=>status.textContent="● Voice Error: "+e.error;recognition.onend=()=>micButton.disabled=false;recognition.start()}}catch(error){status.textContent="● "+error.message;console.error(error)}finally{micButton.disabled=false}}
 micButton.addEventListener("click",startVoice);
+
+// Attachment controls: images are sent to Gemini Vision; supported text files are extracted locally.
+const attachButton=$("attachButton"),attachMenu=$("attachMenu"),cameraInput=$("cameraInput"),photosInput=$("photosInput"),filesInput=$("filesInput"),attachmentInfo=$("attachmentInfo");
+attachButton.addEventListener("click",()=>attachMenu.classList.toggle("open"));
+$("cameraOption").addEventListener("click",()=>{attachMenu.classList.remove("open");cameraInput.click()});
+$("photosOption").addEventListener("click",()=>{attachMenu.classList.remove("open");photosInput.click()});
+$("filesOption").addEventListener("click",()=>{attachMenu.classList.remove("open");filesInput.click()});
+async function loadImage(file){if(!file)return;if(file.size>7*1024*1024){alert("Image 7 MB se chhoti rakhein.");return}if(!["image/jpeg","image/png","image/webp"].includes(file.type)){alert("JPG, PNG ya WEBP image choose karein.");return}const data=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)});attachment={type:"image",name:file.name||"camera-image",mimeType:file.type,data};attachmentInfo.textContent="Attached image: "+(file.name||"Camera photo")+" · Message likhkar Send karein";attachmentInfo.classList.add("show")}
+cameraInput.addEventListener("change",e=>loadImage(e.target.files[0]).catch(err=>alert(err.message)));
+photosInput.addEventListener("change",e=>loadImage(e.target.files[0]).catch(err=>alert(err.message)));
+filesInput.addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;if(f.size>50*1024){alert("Text file 50 KB se chhoti honi chahiye.");return}try{const text=await f.text();attachment={type:"text",name:f.name,text};attachmentInfo.textContent="Attached file: "+f.name+" · Message likhkar Send karein";attachmentInfo.classList.add("show")}catch{alert("File read nahi ho saki")}});
+$("thinkButton").addEventListener("click",()=>{thinkHarder=!thinkHarder;$("thinkButton").classList.toggle("active",thinkHarder);$("thinkButton").title=thinkHarder?"Think harder ON":"Think harder";status.textContent=thinkHarder?"● THINK HARDER ON":"● STANDARD MODE"});
+// Drawer and local utility panels
+const drawer=$("drawer");$("menuButton").addEventListener("click",()=>drawer.classList.add("open"));$("closeDrawer").addEventListener("click",()=>drawer.classList.remove("open"));drawer.addEventListener("click",e=>{if(e.target===drawer)drawer.classList.remove("open")});
+document.querySelectorAll(".drawerItem[data-panel]").forEach(b=>b.addEventListener("click",()=>{drawer.classList.remove("open");$(b.dataset.panel).classList.add("open");if(b.dataset.panel==="libraryPanel")renderLibrary();if(b.dataset.panel==="projectsPanel")renderProjects();if(b.dataset.panel==="scheduledPanel")renderReminders()}));
+document.querySelectorAll(".closeModal").forEach(b=>b.addEventListener("click",()=>b.closest(".modalPanel").classList.remove("open")));
+function getList(key){try{return JSON.parse(localStorage.getItem(key)||"[]")}catch{return []}}
+function setList(key,list){localStorage.setItem(key,JSON.stringify(list))}
+function renderLibrary(){const box=$("libraryList");box.innerHTML="";getList("jarvis_library").forEach((item,i)=>{const b=document.createElement("button");b.textContent=(i+1)+". "+item.title+" · "+item.date;b.onclick=()=>{history=item.history;saveHistory();chatArea.innerHTML="";renderHistory();$("libraryPanel").classList.remove("open")};box.append(b)})}
+$("saveChatButton").addEventListener("click",()=>{const list=getList("jarvis_library");list.unshift({title:history.find(x=>x.role==="user")?.text?.slice(0,45)||"JARVIS Chat",date:new Date().toLocaleString("en-IN"),history:history.slice(-40)});setList("jarvis_library",list.slice(0,30));renderLibrary()});
+function renderProjects(){const box=$("projectList");box.innerHTML="";getList("jarvis_projects").forEach(p=>{const b=document.createElement("button");b.textContent="📁 "+p;b.onclick=()=>{input.value="Project: "+p+" — ";$("projectsPanel").classList.remove("open");input.focus()};box.append(b)})}
+$("createProject").addEventListener("click",()=>{const name=$("projectName").value.trim();if(!name)return;const list=getList("jarvis_projects");if(!list.includes(name))list.push(name);setList("jarvis_projects",list);$("projectName").value="";renderProjects()});
+function renderReminders(){const box=$("reminderList");box.innerHTML="";getList("jarvis_reminders").forEach(r=>{const p=document.createElement("p");p.textContent=new Date(r.at).toLocaleString("en-IN")+" — "+r.text;box.append(p)})}
+$("addReminder").addEventListener("click",()=>{const text=$("reminderText").value.trim(),mins=Number($("reminderMinutes").value);if(!text||!Number.isFinite(mins)||mins<1||mins>10080){alert("1 se 10080 minutes aur reminder text dein.");return}const r={text,at:Date.now()+mins*60000};const list=getList("jarvis_reminders");list.push(r);setList("jarvis_reminders",list);$("reminderText").value="";$("reminderMinutes").value="";renderReminders();alert("Reminder set. JARVIS ko is device par khula rakhein.")});
+function checkReminders(){const list=getList("jarvis_reminders"),now=Date.now(),due=list.filter(r=>r.at<=now);if(due.length){due.forEach(r=>alert("JARVIS Reminder: "+r.text));setList("jarvis_reminders",list.filter(r=>r.at>now));renderReminders()}}
+setInterval(checkReminders,15000);
+
 renderHistory();
 </script>
 </body>

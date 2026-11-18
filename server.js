@@ -22,7 +22,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.json({ limit: "100kb" }));
+app.use(express.json({ limit: "12mb" }));
 
 app.use((req, res, next) => {
   console.log(new Date().toLocaleTimeString(), req.method, req.url);
@@ -119,7 +119,7 @@ function cleanHistory(history) {
     }));
 }
 
-async function askGemini(model, contents, apiKey) {
+async function askGemini(model, contents, apiKey, thinkHarder = false) {
   const response = await safeFetch(
     `${API_URL}/models/${encodeURIComponent(model)}:generateContent`,
     {
@@ -141,13 +141,14 @@ async function askGemini(model, contents, apiKey) {
               new Intl.DateTimeFormat("en-IN", {timeZone:"Asia/Kolkata", dateStyle:"full", timeStyle:"long"}).format(new Date()) +
               ". When asked today's date, day, year or current time, use this information, not training data. " +
               "For events or facts after your knowledge, be honest if you cannot verify them live. " +
-              "Give accurate, clear, helpful and age-appropriate answers."
+              "Give accurate, clear, helpful and age-appropriate answers. " +
+              (thinkHarder ? "For this request, reason carefully and provide a more thorough, step-by-step explanation when useful. Do not reveal private chain-of-thought; give a concise explanation of conclusions." : "Answer clearly and directly.")
           }]
         },
         contents,
         generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 1500
+          temperature: thinkHarder ? 0.4 : 0.7,
+          maxOutputTokens: thinkHarder ? 2500 : 1500
         }
       })
     },
@@ -172,6 +173,25 @@ async function askGemini(model, contents, apiKey) {
   if (!reply) throw new Error("Gemini returned an empty response");
 
   return reply;
+}
+
+function buildUserParts(message, attachment) {
+  const parts = [{ text: message.trim() }];
+  if (!attachment) return parts;
+  if (attachment.type === "image") {
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowed.includes(attachment.mimeType)) throw new Error("Image format JPG, PNG ya WEBP hona chahiye.");
+    if (typeof attachment.data !== "string" || !attachment.data.trim()) throw new Error("Image data missing hai.");
+    const raw = attachment.data.replace(/^data:[^,]+,/, "");
+    if (raw.length > 10_000_000) throw new Error("Image bahut badi hai. 7 MB se chhoti image bhejein.");
+    parts.push({ inlineData: { mimeType: attachment.mimeType, data: raw } });
+  } else if (attachment.type === "text") {
+    if (typeof attachment.text !== "string" || attachment.text.length > 50000) throw new Error("Text file 50 KB se chhoti honi chahiye.");
+    parts.push({ text: "\n\nAttached file: " + String(attachment.name || "file") + "\n" + attachment.text });
+  } else {
+    throw new Error("Ye file type abhi supported nahi hai. Image ya TXT/MD/CSV/JSON file bhejein.");
+  }
+  return parts;
 }
 
 app.post("/api/chat", async (req, res) => {
@@ -199,11 +219,17 @@ app.post("/api/chat", async (req, res) => {
   }
 
   const history = cleanHistory(req.body?.history);
-
+  let userParts;
+  try {
+    userParts = buildUserParts(message, req.body?.attachment);
+  } catch (error) {
+    return res.status(400).json({ success: false, error: error.message });
+  }
   const contents = [
     ...history,
-    { role: "user", parts: [{ text: message.trim() }] }
+    { role: "user", parts: userParts }
   ];
+  const thinkHarder = req.body?.thinkHarder === true;
 
   let models = [];
 
@@ -234,7 +260,7 @@ app.post("/api/chat", async (req, res) => {
     try {
       console.log("Trying model:", model);
 
-      const reply = await askGemini(model, contents, apiKey);
+      const reply = await askGemini(model, contents, apiKey, thinkHarder);
 
       console.log("SUCCESS:", model);
 
