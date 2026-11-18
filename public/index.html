@@ -2,458 +2,107 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="theme-color" content="#101827">
-<title>JARVIS AI</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>J.A.R.V.I.S. — Personal AI</title>
 <style>
+:root{color-scheme:dark;--bg:#07111f;--panel:#0d1b2d;--line:#193956;--cyan:#35d5ff;--blue:#168dff;--muted:#8ba7c2}
 *{box-sizing:border-box}
-
-body{
- margin:0;
- background:#101827;
- color:#e8edf5;
- font-family:Arial,sans-serif;
- height:100dvh;
- display:flex;
- flex-direction:column;
-}
-
-header{
- height:65px;
- flex-shrink:0;
- display:flex;
- align-items:center;
- justify-content:space-between;
- padding:0 16px;
- background:#172234;
- border-bottom:1px solid #29364a;
-}
-
-.brand{
- font-size:21px;
- font-weight:bold;
- letter-spacing:2px;
- color:#39c5ff;
-}
-
-#newChat{
- background:#24364c;
- color:white;
- border:1px solid #40536c;
- padding:10px 13px;
- border-radius:10px;
-}
-
-#chatArea{
- flex:1;
- overflow-y:auto;
- padding:18px 14px;
- width:100%;
- max-width:850px;
- margin:auto;
-}
-
-.welcome{
- text-align:center;
- margin:60px 10px;
-}
-
-.welcome h1{
- color:#42c8ff;
- font-size:29px;
-}
-
-.welcome p{color:#aab8ca}
-
-.message{
- display:flex;
- margin:18px 0;
- gap:10px;
- align-items:flex-start;
-}
-
-.avatar{
- width:34px;
- height:34px;
- flex-shrink:0;
- border-radius:50%;
- display:flex;
- align-items:center;
- justify-content:center;
- background:#21405c;
- color:#55d3ff;
- font-weight:bold;
-}
-
-.message.user .avatar{
- background:#345044;
- color:#a7f3c0;
-}
-
-.content{
- flex:1;
- min-width:0;
- line-height:1.65;
- white-space:pre-wrap;
- overflow-wrap:anywhere;
- padding-top:5px;
-}
-
-.message.user .content{color:#d5e7ff}
-.message.assistant .content{color:#f1f5fa}
-
-#bottom{
- padding:12px 12px max(12px,env(safe-area-inset-bottom));
- background:#101827;
- border-top:1px solid #29364a;
-}
-
-#controls{
- max-width:850px;
- margin:auto;
-}
-
-#composer{
- display:flex;
- align-items:flex-end;
- gap:8px;
- background:#1c293b;
- border:1px solid #42536a;
- border-radius:18px;
- padding:8px;
-}
-
-#messageInput{
- flex:1;
- min-width:0;
- max-height:120px;
- resize:none;
- border:0;
- outline:none;
- background:transparent;
- color:white;
- padding:12px 8px;
- font-size:16px;
- font-family:inherit;
-}
-
-#messageInput::placeholder{color:#94a3b8}
-
-.action{
- border:0;
- border-radius:13px;
- padding:12px;
- font-size:17px;
- background:#30435b;
- color:white;
-}
-
-#sendButton{
- background:#29b9f3;
- color:#071421;
- font-weight:bold;
-}
-
+body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at 50% 5%,#102b48 0,#07111f 48%,#050b14 100%);color:#eaf6ff;font-family:Inter,Arial,sans-serif;display:flex;flex-direction:column}
+header{height:68px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid #18344d;background:#071321eF}
+.brand{font-size:19px;font-weight:800;letter-spacing:2px;color:var(--cyan);text-shadow:0 0 18px #168dff88}
+.brand small{display:block;font-size:9px;letter-spacing:3px;color:#8eb9d8;margin-top:3px}
+.head-actions{display:flex;gap:8px}
+button,select{font:inherit}
+.topbtn{border:1px solid #28516f;background:#10243a;color:#dff5ff;border-radius:11px;padding:9px 11px}
+#chatArea{width:100%;max-width:850px;margin:0 auto;flex:1;overflow-y:auto;padding:16px 14px 22px}
+.hero{text-align:center;padding:22px 10px 26px}
+.orb{width:116px;height:116px;margin:0 auto 18px;border-radius:50%;position:relative;display:grid;place-items:center;background:radial-gradient(circle at 50% 50%,#54e8ff 0,#138de7 20%,#0b3158 48%,#061525 70%);box-shadow:0 0 20px #21baffaa,0 0 55px #087bd477,inset 0 0 20px #77eaff88;animation:pulse 3s ease-in-out infinite}
+.orb:before,.orb:after{content:"";position:absolute;inset:-9px;border:1px solid #38cfff99;border-radius:50%;animation:spin 9s linear infinite}
+.orb:after{inset:-17px;border-color:#168dff66;animation-direction:reverse;animation-duration:13s}
+.orb span{font-size:31px;font-weight:900;letter-spacing:2px;color:white;text-shadow:0 0 16px #b7f7ff}
+@keyframes pulse{50%{box-shadow:0 0 30px #21baffdd,0 0 75px #087bd499,inset 0 0 25px #77eaffaa}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero h1{margin:0;color:#e8f8ff;font-size:25px;letter-spacing:2px}
+.hero h1 em{font-style:normal;color:var(--cyan)}
+.tagline{color:#9ab7d0;margin:9px 0 14px;font-size:14px}
+.datetime{display:inline-block;border:1px solid #1d4564;background:#0b1d30;border-radius:20px;padding:7px 13px;color:#aeeaff;font-size:12px}
+.quick{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 auto 22px;max-width:650px}
+.quick button{border:1px solid #214969;background:#0d2034;color:#cdeeff;border-radius:20px;padding:8px 12px;font-size:12px}
+.message{display:flex;margin:17px 0;gap:10px;align-items:flex-start}
+.avatar{width:34px;height:34px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:#123c5a;color:#64ddff;font-weight:800;border:1px solid #286184}
+.message.user .avatar{background:#174538;color:#b1f6cf;border-color:#27745b}
+.content{flex:1;min-width:0;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;padding:6px 0}
+.message.user .content{color:#d6eaff}.message.assistant .content{color:#f1f8ff}
+#bottom{padding:12px 12px max(12px,env(safe-area-inset-bottom));background:#071321;border-top:1px solid #18344d}
+#controls{max-width:850px;margin:auto}
+#composer{display:flex;align-items:flex-end;gap:8px;background:#0d2034;border:1px solid #28516f;border-radius:18px;padding:8px;box-shadow:0 0 22px #087bd422}
+#messageInput{flex:1;min-width:0;max-height:120px;resize:none;border:0;outline:none;background:transparent;color:white;padding:12px 8px;font-size:16px;font-family:inherit}
+#messageInput::placeholder{color:#7898b4}
+.action{border:0;border-radius:13px;padding:12px;font-size:17px;background:#173c5c;color:white}
+#sendButton{background:linear-gradient(135deg,#46e1ff,#168dff);color:#03111f;font-weight:900;min-width:46px}
 button:disabled{opacity:.45}
-
-#status{
- text-align:center;
- color:#8da4bc;
- font-size:12px;
- padding-top:9px;
-}
-
-#language{
- background:#1c293b;
- color:#dcecff;
- border:1px solid #42536a;
- border-radius:8px;
- padding:5px;
-}
-
-@media(min-width:700px){
- #chatArea{padding:25px}
- #bottom{padding-left:25px;padding-right:25px}
-}
+.footrow{display:flex;justify-content:space-between;align-items:center;gap:8px}
+#status{color:#83b5d4;font-size:11px;padding:9px 2px 0}
+#language{background:#10243a;color:#dcecff;border:1px solid #28516f;border-radius:8px;padding:5px;margin-top:7px}
+.credit{text-align:center;color:#64839e;font-size:11px;padding:8px 0 0;letter-spacing:1px}
+@media(min-width:700px){#chatArea{padding:22px 25px}#bottom{padding-left:25px;padding-right:25px}.hero{padding-top:30px}}
 </style>
 </head>
-
 <body>
-
 <header>
- <div class="brand">✦ JARVIS AI</div>
- <button id="newChat">＋ नया चैट</button>
+ <div class="brand">J.A.R.V.I.S.<small>PERSONAL AI ASSISTANT</small></div>
+ <div class="head-actions"><button class="topbtn" id="newChat">＋ New Chat</button></div>
 </header>
-
 <main id="chatArea">
- <div class="welcome" id="welcome">
-  <h1>नमस्ते! मैं JARVIS हूँ।</h1>
-  <p>आज मैं आपकी क्या मदद कर सकता हूँ?</p>
+ <section class="hero" id="welcome">
+  <div class="orb"><span>J</span></div>
+  <h1>HELLO, I'M <em>JARVIS</em></h1>
+  <p class="tagline">Your intelligent personal assistant</p>
+  <div class="datetime" id="dateTime">India time loading…</div>
+ </section>
+ <div class="quick" id="quickPrompts">
+  <button data-prompt="Aaj ki date aur samay batao">📅 Aaj ki date</button>
+  <button data-prompt="Mujhe Hindi mein introduce karo">✨ Introduce yourself</button>
+  <button data-prompt="Mujhe ek useful idea do">💡 Give me an idea</button>
  </div>
 </main>
-
 <footer id="bottom">
  <div id="controls">
   <div id="composer">
    <button class="action" id="micButton" type="button" title="बोलकर पूछें">🎤</button>
-   <textarea id="messageInput" rows="1"
-    placeholder="JARVIS से कुछ भी पूछें..."></textarea>
+   <textarea id="messageInput" rows="1" placeholder="Message JARVIS…"></textarea>
    <button class="action" id="sendButton" type="button">➤</button>
   </div>
-
-  <div style="display:flex;justify-content:space-between;align-items:center">
-   <div id="status">● JARVIS ONLINE</div>
-   <select id="language">
-    <option value="hi-IN">हिंदी</option>
-    <option value="en-US">English</option>
-   </select>
+  <div class="footrow">
+   <div id="status">● JARVIS ONLINE · GEMINI CONNECTED</div>
+   <select id="language"><option value="hi-IN">हिंदी</option><option value="en-US">English</option></select>
   </div>
+  <div class="credit">MADE BY YOGESH</div>
  </div>
 </footer>
-
 <script type="module">
-const $ = id => document.getElementById(id);
-
-const chatArea = $("chatArea");
-const input = $("messageInput");
-const sendButton = $("sendButton");
-const micButton = $("micButton");
-const status = $("status");
-const language = $("language");
-
-const STORAGE_KEY = "jarvis_chat_v6";
-let history = [];
-let busy = false;
-
-try {
-  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  if (Array.isArray(saved)) {
-    history = saved
-      .filter(x => x && ["user","model"].includes(x.role) && typeof x.text === "string")
-      .slice(-40);
-  }
-} catch {
-  history = [];
-}
-
-function saveHistory() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(-40)));
-  } catch (error) {
-    console.error("History save error:", error);
-  }
-}
-
-function scrollBottom() {
-  chatArea.scrollTop = chatArea.scrollHeight;
-}
-
-function addMessage(role, text, save = false) {
-  $("welcome")?.remove();
-
-  const row = document.createElement("div");
-  row.className = "message " + (role === "user" ? "user" : "assistant");
-
-  const avatar = document.createElement("div");
-  avatar.className = "avatar";
-  avatar.textContent = role === "user" ? "आप" : "J";
-
-  const content = document.createElement("div");
-  content.className = "content";
-  content.textContent = text;
-
-  row.append(avatar, content);
-  chatArea.appendChild(row);
-  scrollBottom();
-
-  if (save) {
-    history.push({role, text});
-    history = history.slice(-40);
-    saveHistory();
-  }
-
-  return content;
-}
-
-function renderHistory() {
-  for (const item of history) {
-    addMessage(item.role, item.text, false);
-  }
-}
-
-async function askJarvis(message, speakReply = false) {
-  message = message.trim();
-  if (!message || busy) return;
-
-  busy = true;
-  sendButton.disabled = true;
-  micButton.disabled = true;
-
-  addMessage("user", message, true);
-  const replyBox = addMessage("model", "सोच रहा हूँ...");
-
-  status.textContent = "● GEMINI सोच रहा है...";
-
-  try {
-    const { Capacitor } = await import("@capacitor/core");
-    const apiBase = Capacitor.isNativePlatform()
-      ? "https://jarvis-ai-e5zw.onrender.com"
-      : "";
-    const response = await fetch(`${apiBase}/api/chat`, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        message,
-        history: history.slice(0, -1).slice(-12)
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok || !data.success || !data.reply) {
-      throw new Error(data.error || "जवाब नहीं मिला");
-    }
-
-    replyBox.textContent = data.reply;
-
-    history.push({role:"model", text:data.reply});
-    history = history.slice(-40);
-    saveHistory();
-
-    status.textContent = "● JARVIS ONLINE";
-
-    if (speakReply && "speechSynthesis" in window) {
-      speechSynthesis.cancel();
-
-      const speech = new SpeechSynthesisUtterance(data.reply);
-      speech.lang = language.value;
-      speech.rate = 0.95;
-      speechSynthesis.speak(speech);
-    }
-
-  } catch (error) {
-    replyBox.textContent = "माफ़ कीजिए, जवाब नहीं मिला। " + error.message;
-    status.textContent = "● CONNECTION ERROR";
-    console.error("JARVIS:", error);
-  } finally {
-    busy = false;
-    sendButton.disabled = false;
-    micButton.disabled = false;
-    input.focus();
-    scrollBottom();
-  }
-}
-
-sendButton.addEventListener("click", () => {
-  const text = input.value;
-  if (!text.trim()) return;
-
-  input.value = "";
-  input.style.height = "auto";
-  askJarvis(text, false);
-});
-
-input.addEventListener("keydown", event => {
-  if (event.key === "Enter" && !event.shiftKey) {
-    event.preventDefault();
-    sendButton.click();
-  }
-});
-
-input.addEventListener("input", () => {
-  input.style.height = "auto";
-  input.style.height = Math.min(input.scrollHeight, 120) + "px";
-});
-
-$("newChat").addEventListener("click", () => {
-  if (busy) return;
-
-  history = [];
-  saveHistory();
-  chatArea.innerHTML = `
-    <div class="welcome" id="welcome">
-      <h1>नमस्ते! मैं JARVIS हूँ।</h1>
-      <p>आज मैं आपकी क्या मदद कर सकता हूँ?</p>
-    </div>`;
-  if ("speechSynthesis" in window) speechSynthesis.cancel();
-  status.textContent = "● नया चैट शुरू हुआ";
-});
-
-async function startVoice() {
-  if (busy) return;
-
-  try {
-    micButton.disabled = true;
-    status.textContent = "● आवाज सुन रहा हूँ...";
-
-    const {Capacitor} = await import("@capacitor/core");
-
-    if (Capacitor.isNativePlatform()) {
-      const {SpeechRecognition} = await import("@capacitor-community/speech-recognition");
-
-      const permission = await SpeechRecognition.requestPermissions();
-
-      if (permission.speechRecognition !== "granted") {
-        throw new Error("माइक्रोफोन की अनुमति नहीं मिली");
-      }
-
-      const result = await SpeechRecognition.start({
-        language: language.value,
-        maxResults: 1,
-        partialResults: false
-      });
-
-      const spoken = result.matches?.[0];
-
-      if (spoken) {
-        await askJarvis(spoken, true);
-      } else {
-        status.textContent = "● आवाज समझ नहीं आई";
-      }
-    } else {
-      const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-      if (!Recognition) {
-        throw new Error("इस ब्राउज़र में Voice Recognition उपलब्ध नहीं है");
-      }
-
-      const recognition = new Recognition();
-      recognition.lang = language.value;
-      recognition.maxAlternatives = 1;
-      recognition.interimResults = false;
-
-      recognition.onresult = event => {
-        askJarvis(event.results[0][0].transcript, true);
-      };
-
-      recognition.onerror = event => {
-        status.textContent = "● Voice Error: " + event.error;
-      };
-
-      recognition.onend = () => {
-        micButton.disabled = false;
-      };
-
-      recognition.start();
-    }
-
-  } catch (error) {
-    status.textContent = "● " + error.message;
-    console.error(error);
-  } finally {
-    micButton.disabled = false;
-  }
-}
-
-micButton.addEventListener("click", startVoice);
-
+const $=id=>document.getElementById(id);
+const chatArea=$("chatArea"),input=$("messageInput"),sendButton=$("sendButton"),micButton=$("micButton"),status=$("status"),language=$("language");
+const STORAGE_KEY="jarvis_chat_v6";
+let history=[],busy=false;
+try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");if(Array.isArray(saved))history=saved.filter(x=>x&&["user","model"].includes(x.role)&&typeof x.text==="string").slice(-40)}catch{history=[]}
+function updateClock(){const now=new Date();$("dateTime").textContent=new Intl.DateTimeFormat("hi-IN",{timeZone:"Asia/Kolkata",dateStyle:"full",timeStyle:"short"}).format(now)+" (IST)"}
+updateClock();setInterval(updateClock,30000);
+function saveHistory(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(history.slice(-40)))}catch(e){console.error("History save:",e)}}
+function scrollBottom(){chatArea.scrollTop=chatArea.scrollHeight}
+function addMessage(role,text,save=false){$("welcome")?.remove();$("quickPrompts")?.remove();const row=document.createElement("div");row.className="message "+(role==="user"?"user":"assistant");const avatar=document.createElement("div");avatar.className="avatar";avatar.textContent=role==="user"?"आप":"J";const content=document.createElement("div");content.className="content";content.textContent=text;row.append(avatar,content);chatArea.appendChild(row);scrollBottom();if(save){history.push({role,text});history=history.slice(-40);saveHistory()}return content}
+function renderHistory(){for(const item of history)addMessage(item.role,item.text,false)}
+async function askJarvis(message,speakReply=false){message=message.trim();if(!message||busy)return;busy=true;sendButton.disabled=true;micButton.disabled=true;addMessage("user",message,true);const replyBox=addMessage("model","सोच रहा हूँ…");status.textContent="● GEMINI THINKING…";try{const {Capacitor}=await import("@capacitor/core");const apiBase=Capacitor.isNativePlatform()?"https://jarvis-ai-e5zw.onrender.com":"";const response=await fetch(`${apiBase}/api/chat`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message,history:history.slice(0,-1).slice(-12)})});let data;try{data=await response.json()}catch{throw new Error("Server se sahi response nahi mila")}if(!response.ok||!data.success||!data.reply)throw new Error(data.error||"जवाब नहीं मिला");replyBox.textContent=data.reply;history.push({role:"model",text:data.reply});history=history.slice(-40);saveHistory();status.textContent="● JARVIS ONLINE · GEMINI CONNECTED";if(speakReply&&"speechSynthesis"in window){speechSynthesis.cancel();const speech=new SpeechSynthesisUtterance(data.reply);speech.lang=language.value;speech.rate=.95;speechSynthesis.speak(speech)}}catch(error){replyBox.textContent="माफ़ कीजिए, जवाब नहीं मिला। "+error.message;status.textContent="● CONNECTION ERROR";console.error("JARVIS:",error)}finally{busy=false;sendButton.disabled=false;micButton.disabled=false;input.focus();scrollBottom()}}
+sendButton.addEventListener("click",()=>{const text=input.value;if(!text.trim())return;input.value="";input.style.height="auto";askJarvis(text,false)});
+input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendButton.click()}});
+input.addEventListener("input",()=>{input.style.height="auto";input.style.height=Math.min(input.scrollHeight,120)+"px"});
+$("newChat").addEventListener("click",()=>{if(busy)return;history=[];saveHistory();chatArea.innerHTML=`<section class="hero" id="welcome"><div class="orb"><span>J</span></div><h1>HELLO, I'M <em>JARVIS</em></h1><p class="tagline">Your intelligent personal assistant</p><div class="datetime" id="dateTime"></div></section><div class="quick" id="quickPrompts"><button data-prompt="Aaj ki date aur samay batao">📅 Aaj ki date</button><button data-prompt="Mujhe Hindi mein introduce karo">✨ Introduce yourself</button><button data-prompt="Mujhe ek useful idea do">💡 Give me an idea</button></div>`;updateClock();bindQuick();if("speechSynthesis"in window)speechSynthesis.cancel();status.textContent="● NEW CHAT STARTED"});
+function bindQuick(){document.querySelectorAll("[data-prompt]").forEach(b=>b.addEventListener("click",()=>askJarvis(b.dataset.prompt)))}
+bindQuick();
+async function startVoice(){if(busy)return;try{micButton.disabled=true;status.textContent="● LISTENING…";const {Capacitor}=await import("@capacitor/core");if(Capacitor.isNativePlatform()){const {SpeechRecognition}=await import("@capacitor-community/speech-recognition");const permission=await SpeechRecognition.requestPermissions();if(permission.speechRecognition!=="granted")throw new Error("माइक्रोफोन की अनुमति नहीं मिली");const result=await SpeechRecognition.start({language:language.value,maxResults:1,partialResults:false});const spoken=result.matches?.[0];if(spoken)await askJarvis(spoken,true);else status.textContent="● आवाज समझ नहीं आई"}else{const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(!Recognition)throw new Error("इस ब्राउज़र में Voice Recognition उपलब्ध नहीं है");const recognition=new Recognition();recognition.lang=language.value;recognition.maxAlternatives=1;recognition.interimResults=false;recognition.onresult=e=>askJarvis(e.results[0][0].transcript,true);recognition.onerror=e=>status.textContent="● Voice Error: "+e.error;recognition.onend=()=>micButton.disabled=false;recognition.start()}}catch(error){status.textContent="● "+error.message;console.error(error)}finally{micButton.disabled=false}}
+micButton.addEventListener("click",startVoice);
 renderHistory();
-
-if (!history.length) {
-  status.textContent = "● JARVIS ONLINE";
-}
 </script>
-
 </body>
 </html>

@@ -37,7 +37,18 @@ app.get("/api/status", (req, res) => {
     status: "Online",
     version: "6.0",
     brain: "Gemini",
-    memory: true
+    memory: true,
+    date: new Intl.DateTimeFormat("hi-IN", {
+      timeZone: "Asia/Kolkata",
+      dateStyle: "full"
+    }).format(new Date()),
+    time: new Intl.DateTimeFormat("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true
+    }).format(new Date())
   });
 });
 
@@ -121,12 +132,16 @@ async function askGemini(model, contents, apiKey) {
         systemInstruction: {
           parts: [{
             text:
-              "You are JARVIS, a smart and friendly AI assistant. " +
-              "Reply in the same language as the user. " +
-              "Understand previous conversation and maintain context. " +
-              "Use simple Hindi or Hinglish when appropriate. " +
-              "Give accurate, clear, helpful and age-appropriate answers. " +
-              "Do not claim to remember information that is not in the conversation."
+              "You are JARVIS, a smart and friendly AI assistant made by Yogesh. " +
+              "Reply in the same language as the user. Use simple Hindi or Hinglish when appropriate. " +
+              "Understand the supplied conversation history and maintain context, but never claim to remember anything outside it. " +
+              "IMPORTANT CURRENT INDIA DATE AND TIME: " +
+              new Intl.DateTimeFormat("en-CA", {timeZone:"Asia/Kolkata", year:"numeric", month:"2-digit", day:"2-digit"}).format(new Date()) +
+              " ; " +
+              new Intl.DateTimeFormat("en-IN", {timeZone:"Asia/Kolkata", dateStyle:"full", timeStyle:"long"}).format(new Date()) +
+              ". When asked today's date, day, year or current time, use this information, not training data. " +
+              "For events or facts after your knowledge, be honest if you cannot verify them live. " +
+              "Give accurate, clear, helpful and age-appropriate answers."
           }]
         },
         contents,
