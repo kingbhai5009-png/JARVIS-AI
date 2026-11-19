@@ -27,6 +27,162 @@ header{height:68px;flex-shrink:0;display:flex;align-items:center;justify-content
 #attachMenu{display:none;position:absolute;bottom:76px;left:12px;z-index:20;background:#10243a;border:1px solid #28516f;border-radius:16px;padding:8px;width:min(260px,75vw);box-shadow:0 12px 35px #0009}#attachMenu.open{display:grid;gap:6px}.attachOption{padding:12px;text-align:left;border:0;border-radius:10px;background:#17344f;color:#eaf7ff}#composerWrap{position:relative}#attachmentInfo{display:none;color:#9fe8ff;font-size:12px;padding:5px 10px}#attachmentInfo.show{display:block}#thinkButton.active{background:#164b69;color:#75e5ff;outline:1px solid #4bdcff}
 .modalPanel{position:fixed;z-index:40;inset:12% 6%;max-width:520px;margin:auto;height:max-content;max-height:76vh;overflow:auto;background:#0b1b2d;border:1px solid #28516f;border-radius:18px;padding:18px;box-shadow:0 20px 60px #000b;display:none}.modalPanel.open{display:block}.modalPanel h3{margin:0 0 12px;color:#52dcff}.modalPanel button{border:1px solid #28516f;background:#15324c;color:#eaf7ff;border-radius:10px;padding:9px 12px;margin:4px}.modalPanel .closeModal{float:right}.modalPanel input,.modalPanel textarea{width:100%;background:#071321;color:white;border:1px solid #28516f;border-radius:10px;padding:10px;margin:6px 0}#projectList button,#libraryList button{display:block;width:100%;text-align:left;margin:6px 0}
 @media(min-width:700px){#chatArea{padding:22px 25px}#bottom{padding-left:25px;padding-right:25px}.hero{padding-top:30px}}
+
+/* ===== JARVIS PREMIUM LIQUID GLASS UI ===== */
+:root{
+  --glass-bg:rgba(14,31,52,.48);
+  --glass-bg-strong:rgba(12,27,46,.72);
+  --glass-border:rgba(135,214,255,.25);
+  --glass-highlight:rgba(224,248,255,.16);
+  --glass-shadow:0 16px 42px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.10);
+  --glass-blur:blur(22px) saturate(155%);
+}
+html{background:#050c17}
+body{
+  background:
+    radial-gradient(ellipse at 50% 12%,rgba(22,139,224,.23),transparent 42%),
+    radial-gradient(ellipse at 4% 65%,rgba(0,198,255,.09),transparent 34%),
+    radial-gradient(ellipse at 96% 82%,rgba(34,105,255,.10),transparent 35%),
+    linear-gradient(145deg,#071321 0%,#08182a 48%,#040a13 100%);
+  background-attachment:fixed;
+}
+header{
+  position:relative;z-index:10;
+  background:rgba(6,17,31,.58);
+  border-bottom:1px solid var(--glass-border);
+  box-shadow:0 8px 30px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.08);
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+}
+.brand{font-size:18px;letter-spacing:3px;text-shadow:0 0 12px rgba(53,213,255,.7),0 0 30px rgba(22,141,255,.38)}
+.brand small{font-size:9px;letter-spacing:3.2px}
+.topbtn,.menu-btn,.quick button,.msgTools button,.drawerItem,.historyOpen,
+.historyDelete,.modalPanel button,.attachOption,#language{
+  -webkit-backdrop-filter:blur(16px) saturate(150%);backdrop-filter:blur(16px) saturate(150%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 7px 20px rgba(0,0,0,.16);
+  transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;
+}
+.topbtn,.menu-btn{
+  border:1px solid rgba(128,211,255,.32);
+  background:linear-gradient(145deg,rgba(57,133,184,.27),rgba(14,34,57,.48));
+  border-radius:16px;
+}
+button{ -webkit-tap-highlight-color:transparent; }
+button:not(:disabled):active{transform:scale(.96)}
+@media(hover:hover){
+  .topbtn:hover,.menu-btn:hover,.quick button:hover,.msgTools button:hover,
+  .drawerItem:hover,.historyOpen:hover,.modalPanel button:hover,.attachOption:hover{
+    border-color:rgba(95,220,255,.65);background-color:rgba(41,117,164,.32);
+    box-shadow:0 0 22px rgba(35,181,255,.16),inset 0 1px 0 rgba(255,255,255,.15);
+  }
+}
+#chatArea{scrollbar-width:thin;scrollbar-color:rgba(83,183,229,.35) transparent}
+.hero{padding-top:30px}
+.orb{
+  width:146px;height:146px;margin-bottom:24px;
+  background:
+    radial-gradient(circle at 36% 28%,rgba(255,255,255,.95) 0,rgba(101,232,255,.9) 5%,rgba(24,157,239,.92) 19%,rgba(8,62,111,.86) 47%,rgba(4,18,35,.92) 72%),
+    linear-gradient(145deg,rgba(255,255,255,.22),transparent 55%);
+  border:1px solid rgba(126,226,255,.52);
+  box-shadow:0 0 18px rgba(36,194,255,.65),0 0 48px rgba(8,130,255,.38),
+    inset 0 0 24px rgba(126,235,255,.38),inset 0 -16px 28px rgba(0,0,0,.34);
+}
+.orb:before,.orb:after{border-color:rgba(82,211,255,.58);box-shadow:0 0 14px rgba(24,169,255,.22)}
+.orb:after{border-color:rgba(65,151,255,.42)}
+.orb span{font-size:38px;text-shadow:0 0 12px #fff,0 0 28px #45dfff}
+.hero h1{text-shadow:0 4px 22px rgba(0,0,0,.35)}
+.datetime{
+  border:1px solid rgba(120,211,255,.32);
+  background:linear-gradient(135deg,rgba(47,116,158,.25),rgba(10,27,47,.52));
+  box-shadow:var(--glass-shadow);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+}
+.quick button{
+  border:1px solid rgba(119,204,255,.32);
+  background:linear-gradient(145deg,rgba(48,113,154,.30),rgba(12,31,52,.52));
+  border-radius:22px;padding:10px 15px;
+}
+.message{padding:12px;border:1px solid rgba(130,201,238,.13);border-radius:18px;background:rgba(12,29,48,.35);box-shadow:inset 0 1px 0 rgba(255,255,255,.045);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.message.user{background:linear-gradient(135deg,rgba(22,91,112,.28),rgba(13,40,57,.42));border-color:rgba(73,206,224,.22)}
+.avatar{box-shadow:0 0 16px rgba(42,190,255,.15),inset 0 1px 0 rgba(255,255,255,.16)}
+.message.user .avatar{box-shadow:0 0 14px rgba(83,225,166,.12)}
+.msgTools button{
+  border:1px solid rgba(117,198,241,.25);background:rgba(21,51,76,.55);border-radius:10px
+}
+#bottom{
+  position:relative;z-index:8;
+  background:rgba(5,15,28,.68);
+  border-top:1px solid rgba(117,205,255,.24);
+  box-shadow:0 -12px 36px rgba(0,0,0,.18);
+  -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+}
+#composer{
+  background:linear-gradient(135deg,rgba(39,83,119,.46),rgba(10,28,48,.70));
+  border:1px solid rgba(135,216,255,.36);border-radius:25px;padding:9px;
+  box-shadow:0 12px 35px rgba(0,0,0,.28),0 0 24px rgba(18,153,230,.10),
+    inset 0 1px 0 rgba(255,255,255,.17),inset 0 -1px 0 rgba(0,0,0,.2);
+  -webkit-backdrop-filter:blur(24px) saturate(165%);backdrop-filter:blur(24px) saturate(165%);
+}
+#messageInput{caret-color:#51dcff}
+#messageInput::placeholder{color:#91abc3}
+.action{
+  border:1px solid rgba(131,209,255,.18);
+  background:linear-gradient(145deg,rgba(53,111,154,.62),rgba(17,51,81,.78));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 5px 14px rgba(0,0,0,.16);
+  border-radius:17px;min-width:46px;min-height:46px;
+}
+#sendButton{
+  background:linear-gradient(135deg,#70edff 0%,#25c4ff 45%,#168dff 100%);
+  border:1px solid rgba(193,247,255,.7);color:#031321;
+  box-shadow:0 0 18px rgba(36,192,255,.34),inset 0 1px 0 rgba(255,255,255,.65),0 7px 18px rgba(0,0,0,.2);
+}
+#thinkButton.active{background:linear-gradient(135deg,rgba(31,164,207,.72),rgba(22,76,121,.82));box-shadow:0 0 20px rgba(59,211,255,.24)}
+#status{letter-spacing:.35px}
+#language{background:rgba(16,39,62,.72);border:1px solid rgba(126,204,245,.30);border-radius:12px;padding:7px 10px}
+.credit{text-shadow:0 0 14px rgba(64,174,231,.18)}
+#drawer{background:rgba(0,5,12,.56);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+#drawerPanel{
+  background:linear-gradient(155deg,rgba(18,43,67,.92),rgba(5,17,31,.94));
+  border-right:1px solid rgba(132,213,255,.30);
+  box-shadow:20px 0 60px rgba(0,0,0,.48),inset -1px 0 0 rgba(255,255,255,.06);
+  -webkit-backdrop-filter:blur(28px) saturate(155%);backdrop-filter:blur(28px) saturate(155%);
+}
+.drawerItem{border:1px solid rgba(117,190,231,.12);background:rgba(41,83,116,.16);border-radius:14px}
+#historySearch,.historyOpen{
+  background:rgba(5,20,36,.62);border:1px solid rgba(124,197,239,.24);border-radius:13px;
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)
+}
+.historyDelete{background:rgba(84,35,55,.45);border-color:rgba(255,142,174,.25)}
+#attachMenu{
+  background:rgba(11,30,49,.88);border:1px solid rgba(131,211,255,.32);
+  box-shadow:0 18px 45px rgba(0,0,0,.4);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)
+}
+.attachOption{background:rgba(36,82,116,.52);border:1px solid rgba(131,211,255,.16)}
+.modalPanel{
+  background:linear-gradient(145deg,rgba(18,43,67,.94),rgba(5,17,31,.96));
+  border:1px solid rgba(134,214,255,.34);border-radius:23px;
+  box-shadow:0 24px 70px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.12);
+  -webkit-backdrop-filter:blur(28px) saturate(155%);backdrop-filter:blur(28px) saturate(155%)
+}
+.modalPanel button{background:rgba(35,83,119,.58);border-color:rgba(128,207,248,.25)}
+.modalPanel input,.modalPanel textarea{
+  background:rgba(4,17,31,.68);border:1px solid rgba(127,201,244,.27);border-radius:12px
+}
+#attachmentInfo{background:rgba(16,53,76,.48);border:1px solid rgba(117,208,255,.2);border-radius:12px;margin-bottom:7px}
+@media(max-width:420px){
+  header{padding-left:10px;padding-right:10px}
+  .brand{font-size:16px;letter-spacing:2px}
+  .brand small{font-size:8px;letter-spacing:2.5px}
+  .topbtn{padding:9px 9px;font-size:13px}
+  .hero{padding-top:26px}
+  .orb{width:136px;height:136px}
+  #composer{gap:6px;padding:7px}
+  .action{min-width:42px;min-height:44px;padding:10px;font-size:16px}
+  #messageInput{font-size:15px;padding-left:5px;padding-right:5px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+}
+/* ===== END LIQUID GLASS UI ===== */
+
 </style>
 </head>
 <body>
